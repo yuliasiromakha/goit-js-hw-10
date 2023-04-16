@@ -17,35 +17,42 @@ function onInputFill(e) {
 
     const inputValue = e.target.value.trim();
 
+    if (!inputValue) { 
+        return; 
+      }
+
     fetchCountries(inputValue).then(data => {
 
         if (data.length >= 10) {
             Notiflix.Notify.info("Too many matches found. Please enter a more specific name.");
         }
 
-        const createdMarkup = data.reduce((acc, article) => {
-            if (data.length === 1) {
-                return acc + createMaxMarkup(article);
-            } else if (data.length > 2 && data.length < 10) {
-                return acc + createMinMarkup(article);
-            }
-            return acc;
-        }, '');
-
-        
         if (data.length === 1) {
+            const createdMarkup = createMaxMarkup(data[0]);
             insertMaxMarkup(createdMarkup);
-        } else if (data.length > 2 && data.length < 10) {
+            refs.infoList.innerHTML = '';
+            refs.infoSpace.innerHTML = createdMarkup;
+        } else if (data.length > 1 && data.length < 10) {
+            const createdMarkup = data.reduce((acc, article) => acc + createMinMarkup(article), '');
             insertMinMarkup(createdMarkup);
-        } else {
+            refs.infoList.innerHTML = createdMarkup;
+            refs.infoSpace.innerHTML = '';
+        } 
+        else {
             refs.infoList.innerHTML = '';
             refs.infoSpace.innerHTML = '';
         }
     })
-
-
+    .catch(error => {
+        if (error.message === '404') {
+            Notiflix.Notify.failure("Oops, there is no country with that name");
+        }
+        console.log(error);
+    });
 
 }
+
+  
 
 function createMinMarkup({ name, flags }) {
     return `<li class='markup-items'>
