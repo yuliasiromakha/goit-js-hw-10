@@ -29,12 +29,10 @@ function onInputFill(e) {
 
         if (data.length === 1) {
             const createdMarkup = createMaxMarkup(data[0]);
-            insertMaxMarkup(createdMarkup);
-            refs.infoList.innerHTML = '';
             refs.infoSpace.innerHTML = createdMarkup;
+            refs.infoList.innerHTML = '';
         } else if (data.length > 1 && data.length < 10) {
             const createdMarkup = data.reduce((acc, article) => acc + createMinMarkup(article), '');
-            insertMinMarkup(createdMarkup);
             refs.infoList.innerHTML = createdMarkup;
             refs.infoSpace.innerHTML = '';
         } 
@@ -51,8 +49,6 @@ function onInputFill(e) {
     });
 
 }
-
-  
 
 function createMinMarkup({ name, flags }) {
     return `<li class='markup-items'>
@@ -82,12 +78,4 @@ return `
     <li>Languages: ${languagesList}</li>
 </ul>
 `;
-}
-
-function insertMinMarkup(markup) {
-    refs.infoList.innerHTML = markup;
-}
-
-function insertMaxMarkup(markup) {
-    refs.infoSpace.innerHTML = markup;
 }
